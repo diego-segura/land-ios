@@ -56,7 +56,7 @@ struct Home: View {
             }
         }
         .onChange(of: selectedItem, {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 withAnimation {
                     hideItem = selectedItem
                 }

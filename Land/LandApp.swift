@@ -50,6 +50,7 @@ struct LandApp: App {
                 }
                 .padding(.trailing, 22)
             }
+            .preferredColorScheme(.light)
         }
     }
 }
