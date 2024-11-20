@@ -15,13 +15,44 @@ struct ItemDetailView: View {
     var onDismiss: (() -> Void)?
     /// View Properties
     @State private var animateLayers: Bool = false
+    @State private var scale: CGFloat = 1
+    
+    var drag: some Gesture {
+        DragGesture()
+            .onChanged({ value in
+                if value.location.x < 100 {
+                    scale = (UIScreen.main.bounds.width - value.location.x) / UIScreen.main.bounds.width
+                }
+                print(value.location.y)
+                
+                if value.location.y > 70 && value.location.y < 300 {
+                    let scale2 = (UIScreen.main.bounds.height - (value.location.y - 70)) / UIScreen.main.bounds.height
+                    scale = scale2
+                }
+            })
+            .onEnded({ value in
+                if scale < 0.9 {
+                    withAnimation(noteAnimation) {
+                        animateLayers = false
+                    }
+                    onDismiss?()
+                    withAnimation {
+                        scale = 1
+                    }
+                } else {
+                    withAnimation {
+                        scale = 1
+                    }
+                }
+            })
+    }
     
     var body: some View {
         Rectangle()
             .fill(.white)
             .overlay(alignment: .topLeading) {
                 TitleItemView(size: titleItemSize, item: item)
-                    .blur(radius: animateLayers ? 100 : 0)
+                    .blur(radius: animateLayers ? 200 : 0)
                     .opacity(animateLayers ? 0 : 1)
                     .clipShape(.rect(cornerRadius: 10))
             }
@@ -53,7 +84,7 @@ struct ItemDetailView: View {
             }
             .overlay(alignment: .top) {
                 content
-                    .blur(radius: animateLayers ? 0 : 100)
+                    .blur(radius: animateLayers ? 0 : 200)
                     .opacity(animateLayers ? 1 : 0)
                     .padding(.top, safeArea.top + 60)
                     .zIndex(0)
@@ -61,6 +92,9 @@ struct ItemDetailView: View {
             .clipShape(.rect(cornerRadius: animateLayers ? 0 : 10))
             .matchedGeometryEffect(id: item.id, in: animation)
             .transition(.offset(y: 1))
+            .simultaneousGesture(drag)
+            .animation(.smooth, value: scale)
+            .scaleEffect(scale)
             .onAppear {
                 withAnimation(noteAnimation) {
                     animateLayers = true

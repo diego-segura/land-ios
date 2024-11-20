@@ -10,6 +10,7 @@ import SwiftUI
 struct Home: View {
     
     @State var items: [Item] = sampleImages
+    @State private var hideItem: Item?
     @State private var selectedItem: Item?
     @State private var animateView: Bool = false
     @State private var titleItemSize: CGSize = .zero
@@ -40,6 +41,7 @@ struct Home: View {
                     ForEach($items) { $item in
                         itemView(item)
                             .frame(height: 160)
+                            .opacity(hideItem?.id == item.id ? 0 : 1)
                             .onTapGesture {
                                 guard selectedItem == nil else { return }
                                 
@@ -53,6 +55,13 @@ struct Home: View {
                 .safeAreaPadding(8)
             }
         }
+        .onChange(of: selectedItem, {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation {
+                    hideItem = selectedItem
+                }
+            }
+        })
         .allowsHitTesting(selectedItem == nil)
         .overlay {
             GeometryReader {
@@ -67,7 +76,7 @@ struct Home: View {
                             item: item
                         ) {
                             if selectedItem != nil {
-                                withAnimation(noteAnimation.logicallyComplete(after: 0.1)) {
+                                withAnimation(noteAnimation.logicallyComplete(after: 0.3)) {
                                     animateView = false
                                     selectedItem = nil
                                 }

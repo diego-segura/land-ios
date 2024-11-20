@@ -9,7 +9,7 @@ import SwiftUI
 
 import SwiftUI
 
-struct Item: Identifiable {
+struct Item: Identifiable, Equatable {
     private(set) var id: UUID = .init()
     var title: String
     var description: String
