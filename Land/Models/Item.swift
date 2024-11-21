@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftUI
 
 struct Item: Identifiable, Equatable {
-    private(set) var id: UUID = .init()
+    private(set) var id: String = UUID().uuidString
     var title: String
     var description: String
     var image: Image

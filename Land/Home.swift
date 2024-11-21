@@ -11,14 +11,17 @@ struct Home: View {
     
     @State var items: [Item] = sampleImages
     @State private var hideItem: Item?
-    @State private var selectedItem: Item?
     @State private var animateView: Bool = false
     @State private var titleItemSize: CGSize = .zero
+    
+    @State private var expandSheet: Bool = false
+    @State private var selectedItem: Item?
+    @State private var blurBackground = false
+    
     @Namespace private var animation
     
     var body: some View {
         ScrollView(.vertical) {
-            
             VStack(alignment: .leading, spacing: 8) {
                 VStack(alignment: .leading, spacing: 30) {
                     header
@@ -39,75 +42,26 @@ struct Home: View {
                 Divider()
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
                     ForEach($items) { $item in
-                        itemView(item)
-                            .frame(height: 160)
-                            .opacity(hideItem?.id == item.id ? 0 : 1)
-                            .onTapGesture {
-                                guard selectedItem == nil else { return }
-                                
-                                selectedItem = item
-                                withAnimation(noteAnimation) {
-                                    animateView = true
-                                }
-                            }
+                        itemView(item: item)
                     }
                 }
                 .safeAreaPadding(8)
             }
         }
-        .onChange(of: selectedItem, {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation {
-                    hideItem = selectedItem
-                }
-            }
-        })
-        .allowsHitTesting(selectedItem == nil)
+        .blur(radius: expandSheet ? 20 : 0)
+        .opacity(expandSheet ? 0.8 : 1)
         .overlay {
-            GeometryReader {
-                let size = $0.size
-                
-                ForEach(items) { item in
-                    if item.id == selectedItem?.id && animateView {
-                        ItemDetailView(
-                            size: size,
-                            titleItemSize: titleItemSize,
-                            animation: animation,
-                            item: item
-                        ) {
-                            if selectedItem != nil {
-                                withAnimation(noteAnimation.logicallyComplete(after: 0.3)) {
-                                    animateView = false
-                                    selectedItem = nil
-                                }
-                            }
-                        }
-                        .transition(.blurReplace)
-                    }
+            if let selectedItem, expandSheet {
+                ItemView(expandSheet: $expandSheet, animation: animation, item: selectedItem)
+                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+            }
+        }
+        .onChange(of: expandSheet) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + (expandSheet ? 0.04 : 0.03)) {
+                withAnimation(.smooth(duration: 0.3)) {
+                    blurBackground = expandSheet
                 }
             }
-            .ignoresSafeArea()
-        }
-    }
-    
-    func itemView(_ item: Item) -> some View {
-        ZStack {
-            if selectedItem?.id == item.id && animateView {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.clear)
-            } else {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.white)
-                    .overlay {
-                        TitleItemView(size: titleItemSize, item: item)
-                    }
-                    .matchedGeometryEffect(id: item.id, in: animation)
-            }
-        }
-        .onGeometryChange(for: CGSize.self) {
-            $0.size
-        } action: { newValue in
-            titleItemSize = newValue
         }
     }
     
@@ -143,6 +97,29 @@ struct Home: View {
                 Image(.twitter)
             }
         }
+    }
+    
+    func itemView(item: Item) -> some View {
+        ZStack {
+            if expandSheet {
+                Rectangle()
+                    .fill(.clear)
+            } else {
+                Rectangle()
+                    .fill(.background)
+                    .overlay {
+                        ItemCellView(expandSheet: $expandSheet, animation: animation, item: item)
+                            .onTapGesture {
+                                withAnimation(.smooth(duration: 0.3)) {
+                                    selectedItem = item
+                                    expandSheet = true
+                                }
+                            }
+                    }
+                    .matchedGeometryEffect(id: item.id + "BGVIEW", in: animation)
+            }
+        }
+        .frame(height: 245)
     }
 }
 
