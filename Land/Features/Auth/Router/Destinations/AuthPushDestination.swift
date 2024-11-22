@@ -14,7 +14,7 @@ enum AuthPushDestination: PushDestination {
     var destination: some View {
         switch self {
         case .register:
-            Text("register man")
+            CreateProfileView(viewModel: CreateProfileViewModel())
         }
     }
 }

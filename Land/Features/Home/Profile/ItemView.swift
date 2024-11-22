@@ -20,7 +20,7 @@ struct ItemView: View {
         GeometryReader {
             let size = $0.size
             let safeArea = $0.safeAreaInsets
-            let dragProgress = 1.0 - (offsetY / (size.height * 0.5))
+            let dragProgress = 1.0 - (offsetY / (size.height * 0.6))
             let cornerProgress = max(0, dragProgress)
             
             ZStack {
@@ -107,6 +107,7 @@ struct ItemView: View {
                     .onChanged({ value in
                         let translationY = value.translation.height
                         offsetY = (translationY > 0 ? translationY : 0)
+                        
                     }).onEnded({ value in
                         withAnimation(.smooth(duration: 0.3)) {
                             if (offsetY + (value.velocity.height * 0.3)) > size.height * 0.2 {

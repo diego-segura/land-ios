@@ -21,5 +21,7 @@ struct AuthRouterView: View {
             WelcomeView(viewModel: WelcomeViewModel())
                 .navigationDestination(for: AuthPushDestination.self) { $0.destination }
         }
+        .tint(.black)
+        .toolbarBackground(.hidden, for: .navigationBar)
     }
 }

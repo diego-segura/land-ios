@@ -17,6 +17,18 @@ extension View {
         return .zero
     }
     
+    func placeholder<Content: View>(
+        when shouldShow: Bool,
+        alignment: Alignment = .leading,
+        @ViewBuilder placeholder: () -> Content
+    ) -> some View {
+        ZStack(alignment: alignment) {
+            placeholder()
+                .opacity(shouldShow ? 1 : 0)
+            self
+        }
+    }
+    
     var noteAnimation: Animation {
         .smooth(duration: 0.3, extraBounce: 0)
     }

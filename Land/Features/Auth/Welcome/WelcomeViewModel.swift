@@ -43,11 +43,11 @@ extension WelcomeViewModel {
 
 private extension WelcomeViewModel {
     func handleAppleAuth() {
-        authService.logIn()
+        router.push(to: .register)
     }
     
     func handlePhoneAuth() {
-        authService.logIn()
+        router.push(to: .register)
     }
     
     func handleSkipAuth() {
