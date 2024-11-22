@@ -1,13 +1,17 @@
 //
-//  Home.swift
+//  ProfileView.swift
 //  Land
 //
 //  Created by Luka Vujnovac on 20.11.2024..
 //
 
+import Dependencies
 import SwiftUI
 
-struct Home: View {
+struct ProfileView: View {
+    
+    @Dependency(\.authService) private var authService
+    @Dependency(\.homeRouter) private var router
     
     @State var items: [Item] = sampleImages
     @State private var hideItem: Item?
@@ -41,14 +45,14 @@ struct Home: View {
                 }
                 Divider()
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
-                    ForEach($items) { $item in
+                    ForEach(items) { item in
                         itemView(item: item)
                     }
                 }
                 .safeAreaPadding(8)
             }
         }
-        .blur(radius: expandSheet ? 20 : 0)
+        .blur(radius: expandSheet ? 3.5 : 0)
         .opacity(expandSheet ? 0.8 : 1)
         .overlay {
             if let selectedItem, expandSheet {
@@ -56,12 +60,8 @@ struct Home: View {
                     .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
             }
         }
-        .onChange(of: expandSheet) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + (expandSheet ? 0.04 : 0.03)) {
-                withAnimation(.smooth(duration: 0.3)) {
-                    blurBackground = expandSheet
-                }
-            }
+        .onShake {
+            authService.logOut()
         }
     }
     
@@ -102,19 +102,24 @@ struct Home: View {
     func itemView(item: Item) -> some View {
         ZStack {
             if expandSheet {
-                Rectangle()
-                    .fill(.clear)
+                GeometryReader {
+                    let size = $0.size
+                    
+                    item.image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: size.width, height: size.height)
+                        .clipShape(.rect(cornerRadius: 24))
+                }
+                .transition(.blurReplace)
+                .opacity(item.id == selectedItem?.id ? 0 : 1)
             } else {
-                Rectangle()
-                    .fill(.background)
-                    .overlay {
-                        ItemCellView(expandSheet: $expandSheet, animation: animation, item: item)
-                            .onTapGesture {
-                                withAnimation(.smooth(duration: 0.3)) {
-                                    selectedItem = item
-                                    expandSheet = true
-                                }
-                            }
+                ItemCellView(expandSheet: $expandSheet, animation: animation, item: item)
+                    .onTapGesture {
+                        withAnimation(.smooth(duration: 0.3)) {
+                            selectedItem = item
+                            expandSheet = true
+                        }
                     }
                     .matchedGeometryEffect(id: item.id + "BGVIEW", in: animation)
             }
@@ -124,5 +129,5 @@ struct Home: View {
 }
 
 #Preview {
-    ContentView()
+    ProfileView()
 }

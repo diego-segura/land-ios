@@ -11,8 +11,8 @@ import SwiftUI
 struct LandApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
-            .preferredColorScheme(.light)
+            RootView(viewModel: RootViewModel())
+                .preferredColorScheme(.light)
         }
     }
 }

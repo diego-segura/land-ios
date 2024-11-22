@@ -25,7 +25,7 @@ struct ItemView: View {
             
             ZStack {
                 RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius * cornerProgress : 0, style: .continuous)
-                    .fill(.white)
+                    .fill(.clear)
                     .overlay(content: {
                         RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius * cornerProgress : 0, style: .continuous)
                             .fill(.white)
@@ -38,7 +38,7 @@ struct ItemView: View {
                             .opacity(animateContent ? 0 : 1)
                     }
                     .matchedGeometryEffect(id: item.id + "BGVIEW", in: animation)
-                
+                    .opacity(animateContent ? cornerProgress : 0)
                 
                 VStack(spacing: 15) {
                     HStack(spacing: 21) {
@@ -71,7 +71,7 @@ struct ItemView: View {
                             .frame(height: size.width - 50)
                             .padding(.top, size.height < 700 ? 10 : 30)
                         
-                        VStack(alignment: .leading, spacing: 16){
+                        VStack(alignment: .leading, spacing: 16) {
                             VStack(alignment: .leading, spacing: 14) {
                                 buttonsSection
                                 Divider()
@@ -91,6 +91,7 @@ struct ItemView: View {
                             }
                         }
                         .offset(y: animateContent ? 0 : size.height)
+                        .opacity(animateContent ? cornerProgress : 0)
                     }
                     .padding(.horizontal, 10)
                 }
@@ -118,6 +119,7 @@ struct ItemView: View {
                     })
             )
             .ignoresSafeArea(.container, edges: .all)
+            .allowsTightening(!animateContent)
         }
         .onAppear {
             withAnimation(.smooth(duration: 0.3)) {

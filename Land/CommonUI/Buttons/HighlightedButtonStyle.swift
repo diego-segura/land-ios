@@ -14,7 +14,7 @@ struct HighlightedButtonStyle: ButtonStyle {
             .fontWeight(.light)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity)
-            .background(Color(hex: "#E0FF00"), in: .rect(cornerRadius: 6))
+            .background(Color.brand, in: .rect(cornerRadius: 6))
             .opacity(configuration.isPressed ? 0.6 : 1)
     }
 }

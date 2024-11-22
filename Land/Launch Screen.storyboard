@@ -16,11 +16,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="jDn-yd-UdP">
-                                <rect key="frame" x="47" y="347" width="299" height="159"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_green" translatesAutoresizingMaskIntoConstraints="NO" id="3nL-jG-o1R">
+                                <rect key="frame" x="171" y="399.66666666666669" width="51" height="78"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="299" id="Vnt-V3-hkQ"/>
-                                    <constraint firstAttribute="height" constant="159" id="mzW-Kk-a4a"/>
+                                    <constraint firstAttribute="width" constant="51" id="F6l-XB-5Ra"/>
+                                    <constraint firstAttribute="height" constant="78" id="jEA-Ft-J4N"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -28,8 +28,8 @@
                         <color key="backgroundColor" name="Brand"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="jDn-yd-UdP" firstAttribute="centerY" secondItem="Bcu-3y-fUS" secondAttribute="centerY" id="Cde-6H-x44"/>
-                            <constraint firstItem="jDn-yd-UdP" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="PID-Qt-jkw"/>
+                            <constraint firstItem="3nL-jG-o1R" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="FRy-2G-R7p"/>
+                            <constraint firstItem="3nL-jG-o1R" firstAttribute="centerY" secondItem="Bcu-3y-fUS" secondAttribute="centerY" id="kUD-ok-p7t"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -40,7 +40,7 @@
     </scenes>
     <color key="tintColor" name="Brand"/>
     <resources>
-        <image name="logo" width="207.33332824707031" height="233.66667175292969"/>
+        <image name="logo_green" width="51.666667938232422" height="78.333335876464844"/>
         <namedColor name="Brand">
             <color red="0.8784313725490196" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
