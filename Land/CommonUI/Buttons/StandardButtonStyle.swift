@@ -10,12 +10,11 @@ import SwiftUI
 struct StandardButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.callout)
-            .fontWeight(.light)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity)
-            .background(.gray.tertiary, in: .rect(cornerRadius: 6))
+            .background(Color.custom(hex: "f2f2f2"), in: .rect(cornerRadius: 6))
             .opacity(configuration.isPressed ? 0.6 : 1)
+            .animation(.none, value: configuration.isPressed)
     }
 }
 

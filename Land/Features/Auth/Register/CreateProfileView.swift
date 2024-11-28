@@ -32,7 +32,16 @@ struct CreateProfileView: View {
                 }
                 VStack(alignment: .leading, spacing: 30) {
                     TextField("@username", text: $viewModel.state.username)
-                        .textFieldStyle(.profile(field: ProfileField(title: "claim a handle", type: .username, placeholder: "@username")))
+                        .textFieldStyle(
+                            .profile(
+                                field: ProfileField(
+                                    title: "claim a handle",
+                                    type: .username,
+                                    placeholder: "@username",
+                                    isMandatory: true
+                                )
+                            )
+                        )
                         .focused($focusedField, equals: .username)
                     image
                     ForEach($viewModel.state.fields) { $field in
@@ -44,6 +53,7 @@ struct CreateProfileView: View {
             }
             .padding(.top, 91)
         }
+        .scrollDismissesKeyboard(.immediately)
         .scrollIndicators(.hidden)
         .safeAreaPadding(.horizontal, 22)
         .safeAreaInset(edge: .bottom) {

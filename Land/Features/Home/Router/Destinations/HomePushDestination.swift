@@ -8,13 +8,18 @@
 import SwiftUI
 
 enum HomePushDestination: PushDestination {
-    case profile
+    
+    case profile(ProfileViewModel)
+    case book(BookViewModel)
     
     @ViewBuilder
     var destination: some View {
         switch self {
-        case .profile:
-            ProfileView()
+        case .profile(let viewModel):
+            ProfileView(viewModel: viewModel)
+            
+        case .book(let viewModel):
+            BookView(viewModel: viewModel)
         }
     }
 }

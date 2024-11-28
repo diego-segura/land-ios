@@ -27,10 +27,11 @@ struct ItemView: View {
                 RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius * cornerProgress : 0, style: .continuous)
                     .fill(.clear)
                     .overlay(content: {
-                        RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius * cornerProgress : 0, style: .continuous)
-                            .fill(.white)
-                            .opacity(animateContent ? 1 : 0)
-                            .shadow(color: .black.opacity(0.2), radius: 30, x: 5, y: -10)
+                        if animateContent {
+                            RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius * cornerProgress : 0, style: .continuous)
+                                .fill(.white)
+                                .shadow(color: .black.opacity(0.2), radius: 30, x: 5, y: -10)
+                        }
                     })
                     .overlay(alignment: .top) {
                         ItemCellView(expandSheet: $expandSheet, animation: animation, item: item)
@@ -157,7 +158,7 @@ struct ItemView: View {
     }
     
     var username: AttributedString {
-        var result = AttributedString(item.title)
+        var result = AttributedString(LocalStorage.userProfile?.username ?? item.title)
         result.font = .standard(size: 12, weight: 480)
         result.foregroundColor = .black
         result.font = result.font?.weight(.medium)

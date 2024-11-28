@@ -265,7 +265,7 @@ struct CropView: View {
 }
 
 #Preview {
-    CropView(crop: .square, image: UIImage(named: "Sample Pic")) { _, _ in
+    CropView(crop: .circle, image: UIImage(named: "Sample Pic")) { _, _ in
         
     }
 }

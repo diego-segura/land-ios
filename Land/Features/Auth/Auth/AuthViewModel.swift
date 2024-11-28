@@ -1,5 +1,5 @@
 //
-//  WelcomeViewModel.swift
+//  AUthViewModel.swift
 //  Land
 //
 //  Created by Luka Vujnovac on 22.11.2024..
@@ -8,7 +8,7 @@
 import Dependencies
 import Foundation
 
-class WelcomeViewModel: ObservableObject {
+class AuthViewModel: ObservableObject {
     
     @Dependency(\.authRouter) private var router
     @Dependency(\.authService) private var authService
@@ -29,7 +29,7 @@ class WelcomeViewModel: ObservableObject {
     }
 }
 
-extension WelcomeViewModel {
+extension AuthViewModel {
     enum Action {
         case onAppleAuth
         case onPhoneAuth
@@ -41,7 +41,7 @@ extension WelcomeViewModel {
     }
 }
 
-private extension WelcomeViewModel {
+private extension AuthViewModel {
     func handleAppleAuth() {
         router.push(to: .register)
     }

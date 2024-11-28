@@ -1,5 +1,5 @@
 //
-//  WelcomeView.swift
+//  AuthView.swift
 //  Land
 //
 //  Created by Luka Vujnovac on 22.11.2024..
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct WelcomeView: View {
+struct AuthView: View {
     
     @State private var animate = false
-    @StateObject private var viewModel: WelcomeViewModel
+    @StateObject private var viewModel: AuthViewModel
     
-    init(viewModel: @autoclosure @escaping () -> WelcomeViewModel) {
+    init(viewModel: @autoclosure @escaping () -> AuthViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel())
     }
     
@@ -34,20 +34,20 @@ struct WelcomeView: View {
                         }
                         .buttonStyle(.dark)
                         
-                        HStack(spacing: 0) {
-                            Text("or, ")
-                            
-                            Button {
-                                viewModel.trigger(.onSkipAuth)
-                            } label: {
-                                Text("start exploring")
-                                    .contentShape(.rect)
-                                    .underline()
-                            }
-                        }
-                        .font(.standard(size: 16, weight: 360))
-                        .foregroundStyle(Color.brandDark)
-                        .kerning(-0.32)
+//                        HStack(spacing: 0) {
+//                            Text("or, ")
+//                            
+//                            Button {
+//                                viewModel.trigger(.onSkipAuth)
+//                            } label: {
+//                                Text("start exploring")
+//                                    .contentShape(.rect)
+//                                    .underline()
+//                            }
+//                        }
+//                        .font(.standard(size: 16, weight: 360))
+//                        .foregroundStyle(Color.brandDark)
+//                        .kerning(-0.32)
                     }
                     .padding(.horizontal, 62)
                     .transition(.move(edge: .bottom))
@@ -76,5 +76,5 @@ struct WelcomeView: View {
 }
 
 #Preview {
-    WelcomeView(viewModel: WelcomeViewModel())
+    AuthView(viewModel: AuthViewModel())
 }

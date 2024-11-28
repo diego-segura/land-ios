@@ -9,12 +9,16 @@ import SwiftUI
 
 enum AuthPushDestination: PushDestination {
     case register
+    case welcome
     
     @ViewBuilder
     var destination: some View {
         switch self {
         case .register:
             CreateProfileView(viewModel: CreateProfileViewModel())
+            
+        case .welcome:
+            WelcomeView()
         }
     }
 }

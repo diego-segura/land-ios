@@ -16,6 +16,7 @@ class Router<T: PushDestination, U: SheetDestination, V: SwitchDestination>: Obs
     @Published var navigationPath: [PushDestination]
     @Published var sheet: SheetDestination?
     @Published var fullScreenSheet: SheetDestination?
+    @Published var animatedCover: SheetDestination?
     
     let onSwitchPublisher = PassthroughSubject<SwitchDestination, Never>()
     
@@ -30,6 +31,8 @@ class Router<T: PushDestination, U: SheetDestination, V: SwitchDestination>: Obs
     
     func present(_ sheet: SheetDestination, as presentOption: PresentOption = .sheet) {
         switch presentOption {
+        case .animated:
+            self.animatedCover = sheet
         case .fullScreen:
             self.fullScreenSheet = sheet
         case .sheet:
@@ -38,6 +41,7 @@ class Router<T: PushDestination, U: SheetDestination, V: SwitchDestination>: Obs
     }
     
     func dismiss() {
+        animatedCover = nil
         sheet = nil
         fullScreenSheet = nil
     }

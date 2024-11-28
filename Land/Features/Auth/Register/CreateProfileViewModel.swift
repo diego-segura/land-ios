@@ -48,7 +48,7 @@ extension CreateProfileViewModel {
 private extension CreateProfileViewModel {
     func checkSubmit() {
         let mandatoryFields = state.fields.filter { $0.isMandatory }
-        state.canSubmit = !mandatoryFields.contains(where: \.text.isEmpty)
+        state.canSubmit = !mandatoryFields.contains(where: \.text.isEmpty) && state.croppedImage != nil
     }
     
     func handleSubmit() {

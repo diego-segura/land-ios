@@ -13,7 +13,34 @@ extension Font {
     }
     
     static func standard(size: CGFloat, weight: CGFloat, width: CGFloat = 86) -> Font {
-        Font(uiFont: .standard(size, axis: [.weight: weight, .width: width]))
+        Font(uiFont: .standard(size, axis: [.weight: 100, .width: width])).weight(.init(customWeight: weight))
+    }
+}
+
+extension Font.Weight {
+    init(customWeight: CGFloat) {
+        switch customWeight {
+        case ...100:
+            self = .thin
+        case 101...200:
+            self = .ultraLight
+        case 201...311:
+            self = .light
+        case 312...400:
+            self = .regular
+        case 401...500:
+            self = .medium
+        case 501...600:
+            self = .semibold
+        case 601...700:
+            self = .bold
+        case 701...800:
+            self = .heavy
+        case 801...:
+            self = .black
+        default:
+            self = .regular
+        }
     }
 }
 
@@ -76,7 +103,7 @@ public extension UIFont {
         let fontDescriptor = UIFontDescriptor(name: "Antarctica", size: size).addingAttributes([
             UIFontDescriptor.AttributeName.featureSettings: variationAttributes
         ])
-
+        
         return UIFont(descriptor: fontDescriptor, size: size)
     }
 }

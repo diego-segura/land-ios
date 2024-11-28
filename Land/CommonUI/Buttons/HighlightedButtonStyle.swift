@@ -10,8 +10,6 @@ import SwiftUI
 struct HighlightedButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.callout)
-            .fontWeight(.light)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity)
             .background(Color.brand, in: .rect(cornerRadius: 6))

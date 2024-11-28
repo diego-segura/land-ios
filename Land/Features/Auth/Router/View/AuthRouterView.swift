@@ -18,7 +18,7 @@ struct AuthRouterView: View {
     
     var body: some View {
         NavigationStack(path: $router.navigationPath) {
-            WelcomeView(viewModel: WelcomeViewModel())
+            AuthView(viewModel: AuthViewModel())
                 .navigationDestination(for: AuthPushDestination.self) { $0.destination }
         }
         .tint(.black)

@@ -12,18 +12,37 @@ struct HomeRouterView: View {
     
     @StateObject private var router: HomeRouter
     
+    @State private var showAnimatedCover = true
+    
     init(router: @autoclosure @escaping () -> HomeRouter) {
         self._router = StateObject(wrappedValue: router())
     }
     
     var body: some View {
         NavigationStack(path: $router.navigationPath) {
-            ProfileView()
-                .overlay(alignment: .bottomTrailing) {
-                    floatingNavigation
+            ProfileView(viewModel: ProfileViewModel())
+                .navigationDestination(for: HomePushDestination.self) {
+                    $0.destination
                 }
-                .navigationDestination(for: HomePushDestination.self) { $0.destination }
         }
+        .allowsHitTesting(router.animatedCover == nil)
+        .blur(radius: router.animatedCover != nil ? 10 : 0)
+        .overlay {
+            if let animatedCover = router.animatedCover {
+                animatedCover.destination
+                    .transition(.blurReplace())
+                    .onTapGesture {
+                        router.dismiss()
+                    }
+            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if router.animatedCover == nil {
+                floatingNavigation
+                    .transition(.blurReplace)
+            }
+        }
+        .animation(.smooth(duration: 0.3), value: router.animatedCover)
     }
     
     private var floatingNavigation: some View {
@@ -37,7 +56,7 @@ struct HomeRouterView: View {
             .foregroundStyle(.gray)
             
             Button {
-                
+                router.present(.addEntriesMenu, as: .animated)
             } label: {
                 Image(systemName: "plus")
                     .font(.title2)

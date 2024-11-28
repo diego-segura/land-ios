@@ -14,7 +14,7 @@ class AuthService {
     
     func logIn() {
         LocalStorage.isLoggedIn = true
-        authRouter.switch(to: .home)
+        authRouter.push(to: .welcome)
     }
     
     func logOut() {

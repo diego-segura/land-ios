@@ -6,6 +6,7 @@
 //
 
 enum PresentOption {
+    case animated
     case fullScreen
     case sheet
 }

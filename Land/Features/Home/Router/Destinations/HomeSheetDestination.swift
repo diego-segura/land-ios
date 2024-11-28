@@ -9,8 +9,13 @@ import SwiftUI
 
 enum HomeSheetDestination: SheetDestination {
     
+    case addEntriesMenu
+    
     var destination: some View {
-        EmptyView()
+        switch self {
+        case .addEntriesMenu:
+            AddEntriesMenuView()
+        }
     }
     
     var dragIndicatorVisibility: Visibility { .hidden }
