@@ -28,12 +28,12 @@ struct BookView: View {
                 LazyVGrid(columns: [.init(spacing: 5, alignment: .top), .init(spacing: 5, alignment: .top)]) {
                     LazyVStack(spacing: 5) {
                         addButton
-                        ForEach(viewModel.state.items[0]) { item in
+                        ForEach(viewModel.state.items[1]) { item in
                             itemView(item: item)
                         }
                     }
                     LazyVStack(spacing: 5) {
-                        ForEach(viewModel.state.items[1]) { item in
+                        ForEach(viewModel.state.items[0]) { item in
                             itemView(item: item)
                         }
                         Spacer()
@@ -76,8 +76,15 @@ struct BookView: View {
         .blur(radius: viewModel.state.expandSheet ? 3.5 : 0)
         .overlay {
             if let selectedItem = viewModel.state.selectedItem, viewModel.state.expandSheet {
-                ItemView(expandSheet: $viewModel.state.expandSheet, animation: animation, item: selectedItem)
-                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+                switch selectedItem {
+                case .image(let image):
+                    ItemView(expandSheet: $viewModel.state.expandSheet, animation: animation, item: image)
+                        .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+                case .text(let text):
+                    Text(text.text)
+                case .link:
+                    EmptyView()
+                }
             }
         }
         .onAppear {
@@ -101,7 +108,7 @@ struct BookView: View {
                         .frame(width: 24, height: 24)
                         .clipShape(.circle)
                 }
-                Text("messybirkin")
+                Text(LocalStorage.userProfile?.username ?? "")
                     .font(.standard(size: 14, weight: 360))
                     .foregroundStyle(Color.custom(hex: "999999"))
             }
@@ -141,13 +148,37 @@ struct BookView: View {
         .clipShape(.capsule)
     }
     
-    func itemView(item: Item) -> some View {
+    @ViewBuilder
+    func itemView(item: GridItem) -> some View {
+        switch item {
+        case .image(let image):
+            imageView(item: image)
+            
+        case .text(let text):
+            textView(item: text)
+            
+        case .link:
+            Text("link")
+        }
+    }
+    
+    func textView(item: TextGridItem) -> some View {
+            Text(item.text)
+                .lineLimit(8)
+                .font(.standard(size: 12, weight: 360))
+                .padding([.vertical, .leading], 17)
+                .padding(.trailing, 7)
+                .frame(maxWidth: .infinity)
+                .background(Color.custom(hex: "f2f2f2"), in: .rect(cornerRadius: 24))
+    }
+    
+    func imageView(item: ImageGridEntity) -> some View {
         ZStack {
             if viewModel.state.expandSheet {
                 GeometryReader {
                     let size = $0.size
                     
-                    item.image
+                    Image(uiImage: UIImage(data: item.imageData) ?? UIImage())
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: size.width, height: size.height)
@@ -159,30 +190,36 @@ struct BookView: View {
                 ItemCellView(expandSheet: $viewModel.state.expandSheet, animation: animation, item: item)
                     .onTapGesture {
                         withAnimation(.smooth(duration: 0.3)) {
-                            viewModel.state.selectedItem = item
+                            viewModel.state.selectedItem = .image(item)
                             viewModel.state.expandSheet = true
                         }
                     }
                     .matchedGeometryEffect(id: item.id + "BGVIEW", in: animation)
             }
         }
-//        .frame(height: 245)
     }
 }
 
 #Preview {
     NavigationStack {
-        BookView(viewModel: BookViewModel())
+        BookView(viewModel: BookViewModel(book: sampleBooks.first!))
     }
 }
 
 private struct GridItemView: View {
     
-    let item: Item
+    let item: ImageGridEntity
+    
+    let image: UIImage?
+    
+    init(item: ImageGridEntity) {
+        self.item = item
+        self.image = UIImage(data: item.imageData)
+    }
     
     var body: some View {
         VStack(spacing: 5) {
-            item.image
+            Image(uiImage: image ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .clipShape(.rect(cornerRadius: 24))

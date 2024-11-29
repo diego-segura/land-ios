@@ -45,4 +45,29 @@ extension View {
         
         return 0
     }
+    
+    func customBackButton(action: @escaping () -> Void) -> some View {
+        self
+            .navigationBarBackButtonHidden()
+            .safeAreaInset(edge: .top) {
+                HStack(spacing: 2) {
+                    Button {
+                        action()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16))
+                        Text("back")
+                            .font(.standard(size: 16, weight: 360))
+                    }
+                    .contentShape(.rect)
+                    .buttonStyle(.plain)
+                    
+                    Spacer()
+                }
+                .foregroundStyle(.black)
+                .opacity(0.5)
+                .padding(.leading, 23)
+                .padding(.top, 25)
+            }
+    }
 }

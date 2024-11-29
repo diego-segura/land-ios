@@ -11,8 +11,7 @@ import SwiftUI
 struct HomeRouterView: View {
     
     @StateObject private var router: HomeRouter
-    
-    @State private var showAnimatedCover = true
+    @State private var showFloatingNavigation = true
     
     init(router: @autoclosure @escaping () -> HomeRouter) {
         self._router = StateObject(wrappedValue: router())
@@ -21,10 +20,12 @@ struct HomeRouterView: View {
     var body: some View {
         NavigationStack(path: $router.navigationPath) {
             ProfileView(viewModel: ProfileViewModel())
-                .navigationDestination(for: HomePushDestination.self) {
-                    $0.destination
-                }
+                .navigationDestination(
+                    for: HomePushDestination.self,
+                    destination: \.destination
+                )
         }
+        .tint(.black.opacity(0.5))
         .allowsHitTesting(router.animatedCover == nil)
         .blur(radius: router.animatedCover != nil ? 10 : 0)
         .overlay {
@@ -37,12 +38,16 @@ struct HomeRouterView: View {
             }
         }
         .overlay(alignment: .bottomTrailing) {
-            if router.animatedCover == nil {
+            if router.animatedCover == nil, showFloatingNavigation {
                 floatingNavigation
                     .transition(.blurReplace)
             }
         }
         .animation(.smooth(duration: 0.3), value: router.animatedCover)
+        .animation(.smooth(duration: 0.3), value: showFloatingNavigation)
+        .onChange(of: router.navigationPath) { _, newValue in
+            showFloatingNavigation = newValue.last?.showsFloatingNavigation ?? true
+        }
     }
     
     private var floatingNavigation: some View {

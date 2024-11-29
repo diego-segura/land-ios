@@ -7,4 +7,5 @@
 
 import Foundation
 
-class HomeRouter: Router<HomePushDestination, HomeSheetDestination, HomeSwitchDestination> { }
+class HomeRouter: Router<HomePushDestination, HomeSheetDestination, HomeSwitchDestination> {
+}

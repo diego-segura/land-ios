@@ -48,53 +48,17 @@ struct ProfileView: View {
                     .padding(.horizontal, 16)
                 }
                 Divider()
-                LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
-//                    ForEach(viewModel.state.items) { item in
-//                        itemView(item: item)
-//                    }
-                    GeometryReader { proxy in
-                        let size = proxy.size.width
-                        RoundedRectangle(cornerRadius: 24)
-                            .fill(Color.custom(hex: "f2f2f2"))
-                            .frame(width: size, height: size)
-                    }
-                    GeometryReader { proxy in
-                        let size = proxy.size.width
-                        Button {
-                            viewModel.trigger(.onBookTap)
-                        } label: {
-                            RoundedRectangle(cornerRadius: 24)
-                                .fill(Color.custom(hex: "f2f2f2"))
-                                .frame(width: size, height: size)
-                                .overlay {
-                                    VStack(spacing: 0) {
-                                        Text("Camera roll")
-                                            .font(.standard(size: 16, weight: 420))
-                                            .frame(height: .heightForFontSize(size: 20))
-                                        Text("9 entries")
-                                            .font(.standard(size: 12, weight: 360))
-                                            .kerning(-0.12)
-                                            .frame(height: .heightForFontSize(size: 20))
-                                            .opacity(0.6)
-                                    }
-                                    .foregroundStyle(.black)
-                                }
-                        }
+                LazyVGrid(columns: [.init(), .init()]) {
+                    ForEach(viewModel.state.books) { book in
+                        bookView(book)
                     }
                 }
                 .safeAreaPadding(8)
             }
         }
-        .blur(radius: viewModel.state.expandSheet ? 3.5 : 0)
-        .opacity(viewModel.state.expandSheet ? 0.8 : 1)
-        .overlay {
-            if let selectedItem = viewModel.state.selectedItem, viewModel.state.expandSheet {
-                ItemView(expandSheet: $viewModel.state.expandSheet, animation: animation, item: selectedItem)
-                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
-            }
-        }
-        .onShake {
-            viewModel.trigger(.onLogOut)
+        .onAppear {
+            print("sad appear")
+            viewModel.trigger(.onAppear)
         }
     }
     
@@ -122,7 +86,7 @@ struct ProfileView: View {
                 }
             }
             
-            if let bio = LocalStorage.userProfile?.bio {
+            if let bio = LocalStorage.userProfile?.bio, !bio.isEmpty {
                 Text(bio)
                     .font(.standard(size: 14, weight: 360))
                     .kerning(-0.14)
@@ -158,32 +122,30 @@ struct ProfileView: View {
         }
     }
     
-    func itemView(item: Item) -> some View {
-        ZStack {
-            if viewModel.state.expandSheet {
-                GeometryReader {
-                    let size = $0.size
-                    
-                    item.image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: size.width, height: size.height)
-                        .clipShape(.rect(cornerRadius: 24))
-                }
-                .transition(.blurReplace)
-                .opacity(item.id == viewModel.state.selectedItem?.id ? 0 : 1)
-            } else {
-                ItemCellView(expandSheet: $viewModel.state.expandSheet, animation: animation, item: item)
-                    .onTapGesture {
-                        withAnimation(.smooth(duration: 0.3)) {
-                            viewModel.state.selectedItem = item
-                            viewModel.state.expandSheet = true
+    func bookView(_ book: Book) -> some View {
+        GeometryReader { proxy in
+            let size = proxy.size.width
+            Button {
+                viewModel.trigger(.onBookTap(book))
+            } label: {
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(Color.custom(hex: "f2f2f2"))
+                    .overlay {
+                        VStack(spacing: 0) {
+                            Text(book.name)
+                                .font(.standard(size: 16, weight: 420))
+                                .frame(height: .heightForFontSize(size: 20))
+                            Text("\(book.items.count) entries")
+                                .font(.standard(size: 12, weight: 360))
+                                .kerning(-0.12)
+                                .frame(height: .heightForFontSize(size: 20))
+                                .opacity(0.6)
                         }
+                        .foregroundStyle(.black)
                     }
-                    .matchedGeometryEffect(id: item.id + "BGVIEW", in: animation)
             }
+            .frame(width: size, height: size)
         }
-        .frame(height: 245)
     }
 }
 

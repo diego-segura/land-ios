@@ -37,6 +37,7 @@ struct RootView: View {
         .animation(.smooth, value: viewModel.state.rootState)
         .onAppear {
             viewModel.trigger(.onViewAppear)
+            let book = Book(name: "my book", description: "for later", items: [])
         }
     }
 }

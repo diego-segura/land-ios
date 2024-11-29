@@ -9,17 +9,35 @@ import SwiftUI
 
 enum HomePushDestination: PushDestination {
     
+    case addEntryView(AddEntryViewModel)
+    case addText(AddTextViewModel)
     case profile(ProfileViewModel)
     case book(BookViewModel)
     
     @ViewBuilder
     var destination: some View {
         switch self {
+        case .addText(let viewModel):
+            AddTextView(viewModel: viewModel)
+        
+        case .addEntryView(let viewModel):
+            AddEntryView(viewModel: viewModel)
+            
         case .profile(let viewModel):
             ProfileView(viewModel: viewModel)
             
         case .book(let viewModel):
             BookView(viewModel: viewModel)
+        }
+    }
+    
+    var showsFloatingNavigation: Bool {
+        switch self {
+        case .profile, .book:
+            true
+            
+        default:
+            false
         }
     }
 }

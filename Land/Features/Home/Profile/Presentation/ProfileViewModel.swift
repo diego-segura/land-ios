@@ -13,15 +13,22 @@ class ProfileViewModel: ObservableObject {
     @Dependency(\.authService) private var authService
     @Dependency(\.homeRouter) private var router
     
-    @Published var state = ViewState()
+    @Published var state: ViewState
+    
+    init() {
+        self.state = .init(books: LocalStorage.books)
+    }
     
     func trigger(_ action: Action) {
         switch action {
         case .onLogOut:
             handleOnLogOut()
             
-        case .onBookTap:
-            handleOnBookTap()
+        case .onBookTap(let book):
+            handleOnBookTap(book)
+            
+        case .onAppear:
+            handleOnAppear()
         }
     }
     
@@ -29,14 +36,13 @@ class ProfileViewModel: ObservableObject {
 
 extension ProfileViewModel {
     struct ViewState {
-        var expandSheet = false
-        var selectedItem: Item?
-        let items = gridItems
+        var books: [Book]
     }
     
     enum Action {
+        case onAppear
         case onLogOut
-        case onBookTap
+        case onBookTap(Book)
     }
 }
 
@@ -45,7 +51,11 @@ private extension ProfileViewModel {
         authService.logOut()
     }
     
-    func handleOnBookTap() {
-        router.push(to: .book(BookViewModel()))
+    func handleOnBookTap(_ book: Book) {
+        router.push(to: .book(BookViewModel(book: book)))
+    }
+    
+    func handleOnAppear() {
+        state.books = LocalStorage.books
     }
 }

@@ -11,4 +11,7 @@ enum LocalStorage {
     
     @Storage(key: "USER_PROFILE", defaultValue: nil)
     static var userProfile: User?
+    
+    @Storage(key: "BOOKS", defaultValue: [])
+    static var books: [Book]
 }

@@ -10,5 +10,5 @@ import Foundation
 class AppState {
     static let shared = AppState()
 
-    var swipeEnabled = false
+    var swipeEnabled = true
 }

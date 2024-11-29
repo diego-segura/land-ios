@@ -11,25 +11,27 @@ struct ItemCellView: View {
     @Binding var expandSheet: Bool
     var animation: Namespace.ID
     
-    let item: Item
+    let item: ImageGridEntity
+    let image: UIImage?
+    
+    init(expandSheet: Binding<Bool>, animation: Namespace.ID, item: ImageGridEntity) {
+        self._expandSheet = expandSheet
+        self.animation = animation
+        self.item = item
+        self.image = UIImage(data: item.imageData)
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             ZStack {
                 if !expandSheet {
-//                    GeometryReader {
-//                        let size = $0.size
-                        
-                        item.image
+                    Image(uiImage: image ?? UIImage())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-//                            .frame(width: size.width)
                             .clipShape(.rect(cornerRadius: 24))
-//                    }
                     .matchedGeometryEffect(id: item.id + "ARTWORK", in: animation)
                 }
             }
-//            .frame(height: 245)
             
             if !expandSheet {
                 HStack {
@@ -56,11 +58,11 @@ struct ItemCellView: View {
         .contentShape(.rect)
     }
 }
-
-#Preview {
-    @Previewable @Namespace var animation
-    @Previewable @State var expandSheet = false
-    ItemCellView(expandSheet: $expandSheet, animation: animation, item: sampleImages.first!)
-        .frame(width: UIScreen.main.bounds.width / 2, alignment: .leading)
-        .padding()
-}
+//
+//#Preview {
+//    @Previewable @Namespace var animation
+//    @Previewable @State var expandSheet = false
+//    ItemCellView(expandSheet: $expandSheet, animation: animation, item: sampleImages.first!)
+//        .frame(width: UIScreen.main.bounds.width / 2, alignment: .leading)
+//        .padding()
+//}

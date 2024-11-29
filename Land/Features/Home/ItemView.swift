@@ -14,7 +14,15 @@ struct ItemView: View {
     @State private var animateContent: Bool = false
     @State private var offsetY: CGFloat = 0
     
-    let item: Item
+    let item: ImageGridEntity
+    let image: UIImage?
+    
+    init(expandSheet: Binding<Bool>, animation: Namespace.ID, item: ImageGridEntity) {
+        self._expandSheet = expandSheet
+        self.animation = animation
+        self.item = item
+        self.image = UIImage(data: item.imageData)
+    }
     
     var body: some View {
         GeometryReader {
@@ -134,7 +142,7 @@ struct ItemView: View {
         GeometryReader {
             let size = $0.size
             
-            item.image
+            Image(uiImage: image ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: size.width, height: size.height)
@@ -225,7 +233,7 @@ struct ItemView: View {
     }
 }
 
-#Preview {
-    @Previewable @Namespace var animation
-    ItemView(expandSheet: .constant(true), animation: animation, item: sampleImages.first!)
-}
+//#Preview {
+//    @Previewable @Namespace var animation
+//    ItemView(expandSheet: .constant(true), animation: animation, item: sampleImages.first!)
+//}

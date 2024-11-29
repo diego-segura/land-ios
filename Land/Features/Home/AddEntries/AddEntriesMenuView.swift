@@ -5,9 +5,12 @@
 //  Created by Luka Vujnovac on 28.11.2024..
 //
 
+import Dependencies
 import SwiftUI
 
 struct AddEntriesMenuView: View {
+    
+    @Dependency(\.homeRouter) private var router
     
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
@@ -18,7 +21,10 @@ struct AddEntriesMenuView: View {
             VStack(spacing: 5) {
                 button(title: "from your camera roll", symbol: "camera") {}
                 button(title: "add a link", symbol: "link") {}
-                button(title: "write some thoughts", symbol: "text.bubble") {}
+                button(title: "write some thoughts", symbol: "text.bubble") {
+                    router.dismiss()
+                    router.push(to: .addText(AddTextViewModel()))
+                }
             }
         }
         .contentShape(.rect)
