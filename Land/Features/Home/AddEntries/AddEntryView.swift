@@ -127,12 +127,22 @@ private struct ElementView: View {
     var body: some View {
         switch element {
         case .image(let element):
-            Image(uiImage: UIImage(data: element.imageData) ?? UIImage())
+            imageView(element)
         case .text(let element):
             textView(element)
         case .link:
             EmptyView()
         }
+    }
+    
+    func imageView(_ element: ImageGridEntity) -> some View {
+        Image(uiImage: UIImage(data: element.imageData) ?? UIImage())
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 145, height: 145)
+            .clipped()
+            .clipShape(.rect(cornerRadius: 24))
+            .shadow(color: .black.opacity(0.1), radius: 25, x: 0, y: 0)
     }
     
     func textView(_ element: TextGridItem) -> some View {

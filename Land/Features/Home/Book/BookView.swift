@@ -97,7 +97,7 @@ struct BookView: View {
     
     var infoSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("camera roll")
+            Text(book.name)
                 .font(.standard(size: 24, weight: 310))
                 .foregroundStyle(.black)
             HStack(spacing: 6) {
@@ -130,7 +130,7 @@ struct BookView: View {
     
     var addButton: some View {
         Button {
-            
+            viewModel.trigger(.onAdd)
         } label: {
             HStack {
                 Text("add entries")
@@ -166,35 +166,16 @@ struct BookView: View {
             Text(item.text)
                 .lineLimit(8)
                 .font(.standard(size: 12, weight: 360))
-                .padding([.vertical, .leading], 17)
-                .padding(.trailing, 7)
+                .padding(17)
                 .frame(maxWidth: .infinity)
                 .background(Color.custom(hex: "f2f2f2"), in: .rect(cornerRadius: 24))
     }
     
     func imageView(item: ImageGridEntity) -> some View {
-        ZStack {
-            if viewModel.state.expandSheet {
-                GeometryReader {
-                    let size = $0.size
-                    
-                    Image(uiImage: UIImage(data: item.imageData) ?? UIImage())
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: size.width, height: size.height)
-                        .clipShape(.rect(cornerRadius: 24))
-                }
-                .transition(.blurReplace)
-                .opacity(item.id == viewModel.state.selectedItem?.id ? 0 : 1)
-            } else {
-                ItemCellView(expandSheet: $viewModel.state.expandSheet, animation: animation, item: item)
-                    .onTapGesture {
-                        withAnimation(.smooth(duration: 0.3)) {
-                            viewModel.state.selectedItem = .image(item)
-                            viewModel.state.expandSheet = true
-                        }
-                    }
-                    .matchedGeometryEffect(id: item.id + "BGVIEW", in: animation)
+        ImageView(expandSheet: $viewModel.state.expandSheet, animation: animation, selectedItemId: viewModel.state.selectedItem?.id, item: item) {
+            withAnimation(.smooth(duration: 0.3)) {
+                viewModel.state.selectedItem = .image(item)
+                viewModel.state.expandSheet = true
             }
         }
     }
@@ -202,7 +183,58 @@ struct BookView: View {
 
 #Preview {
     NavigationStack {
-        BookView(viewModel: BookViewModel(book: sampleBooks.first!))
+        BookView(viewModel: BookViewModel(book: Book(name: "book", items: [])))
+    }
+}
+
+private struct ImageView: View {
+    
+    @Binding var expandSheet: Bool
+    let animation: Namespace.ID
+    let selectedItemId: String?
+    let item: ImageGridEntity
+    var onTap: () -> Void
+    let image: UIImage?
+    
+    init(
+        expandSheet: Binding<Bool>,
+        animation: Namespace.ID,
+        selectedItemId: String?,
+        item: ImageGridEntity,
+        onTap: @escaping () -> Void
+    ) {
+        self._expandSheet = expandSheet
+        self.animation = animation
+        self.selectedItemId = selectedItemId
+        self.item = item
+        self.onTap = onTap
+        self.image = UIImage(data: item.imageData)
+    }
+    
+    var body: some View {
+        ZStack {
+            if expandSheet {
+                GeometryReader {
+                    let size = $0.size
+                    
+                    if let image = image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: size.width, height: size.height)
+                            .clipShape(.rect(cornerRadius: 24))
+                    }
+                }
+                .transition(.blurReplace)
+                .opacity(item.id == selectedItemId ? 0 : 1)
+            } else {
+                ItemCellView(expandSheet: $expandSheet, animation: animation, item: item)
+                    .onTapGesture {
+                        onTap()
+                    }
+                    .matchedGeometryEffect(id: item.id + "BGVIEW", in: animation)
+            }
+        }
     }
 }
 

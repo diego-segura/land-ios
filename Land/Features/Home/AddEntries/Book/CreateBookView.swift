@@ -9,9 +9,11 @@ import SwiftUI
 
 struct CreateBookView: View {
     
-    let item: GridItem
+    @StateObject private var viewModel: CreateBookViewModel
     
-    @State var bookName = ""
+    init(viewModel: @autoclosure @escaping () -> CreateBookViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel())
+    }
     
     var body: some View {
         VStack(spacing: 43) {
@@ -20,7 +22,7 @@ struct CreateBookView: View {
                     .font(.standard(size: 14, weight: 420))
                     .kerning(-0.14)
                 
-                gridItem(item)
+                gridItem(viewModel.state.item)
             }
             
             VStack(alignment: .leading, spacing: 4) {
@@ -31,7 +33,7 @@ struct CreateBookView: View {
                 
                 TextField(
                     "",
-                    text: $bookName,
+                    text: $viewModel.state.bookName,
                     prompt: Text("type something here").foregroundStyle(.black.opacity(0.3)),
                     axis: .vertical
                 )
@@ -46,7 +48,7 @@ struct CreateBookView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .safeAreaInset(edge: .bottom) {
             Button {
-//                viewModel.trigger(.onNext)
+                viewModel.trigger(.onNext)
             } label: {
                 HStack {
                     Text("next")
@@ -68,7 +70,7 @@ struct CreateBookView: View {
             .padding(.bottom, 13)
         }
         .customBackButton {
-            // TODO: pop
+            viewModel.trigger(.onPop)
         }
     }
     
@@ -76,16 +78,15 @@ struct CreateBookView: View {
     func gridItem(_ item: GridItem) -> some View {
         switch item {
         case .image(let image):
-//            if let image = UIImage(data: image.imageData) {
-//                Image(uiImage: image)
-//            }
-            Image(.pic1)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 145, height: 145)
-                .clipped()
-                .clipShape(.rect(cornerRadius: 24))
-                .shadow(color: .black.opacity(0.1), radius: 25, x: 0, y: 0)
+            if let image = UIImage(data: image.imageData) {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 145, height: 145)
+                    .clipped()
+                    .clipShape(.rect(cornerRadius: 24))
+                    .shadow(color: .black.opacity(0.1), radius: 25, x: 0, y: 0)
+            }
             
         case .text:
             Image(systemName: "book.pages")
@@ -103,9 +104,26 @@ struct CreateBookView: View {
 }
 
 #Preview {
-    CreateBookView(item: .text(.init(text: "dalmacijo moja suzo procvala")))
+    CreateBookView(
+        viewModel: CreateBookViewModel(
+            item: .text(
+                .init(text: "dalmacijo moja suzo procvala")
+            )
+        )
+    )
 }
 
 #Preview("image"){
-    CreateBookView(item: .image(.init(id: "some", title: "", description: "", imageData: Data())))
+    CreateBookView(
+        viewModel: CreateBookViewModel(
+            item: .image(
+                .init(
+                    id: "some",
+                    title: "",
+                    description: "",
+                    imageData: Data()
+                )
+            )
+        )
+    )
 }

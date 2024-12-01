@@ -19,7 +19,10 @@ struct AddEntriesMenuView: View {
                 .font(.standard(size: 24, weight: 310))
                 .padding(.horizontal, 10)
             VStack(spacing: 5) {
-                button(title: "from your camera roll", symbol: "camera") {}
+                button(title: "from your camera roll", symbol: "camera") {
+                    router.dismiss()
+                    router.push(to: .addImage(AddImageViewModel()))
+                }
                 button(title: "add a link", symbol: "link") {}
                 button(title: "write some thoughts", symbol: "text.bubble") {
                     router.dismiss()

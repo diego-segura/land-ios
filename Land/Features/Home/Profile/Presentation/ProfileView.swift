@@ -123,28 +123,41 @@ struct ProfileView: View {
     }
     
     func bookView(_ book: Book) -> some View {
-        GeometryReader { proxy in
-            let size = proxy.size.width
-            Button {
-                viewModel.trigger(.onBookTap(book))
-            } label: {
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(Color.custom(hex: "f2f2f2"))
-                    .overlay {
-                        VStack(spacing: 0) {
-                            Text(book.name)
-                                .font(.standard(size: 16, weight: 420))
-                                .frame(height: .heightForFontSize(size: 20))
-                            Text("\(book.items.count) entries")
-                                .font(.standard(size: 12, weight: 360))
-                                .kerning(-0.12)
-                                .frame(height: .heightForFontSize(size: 20))
-                                .opacity(0.6)
+        Button {
+            viewModel.trigger(.onBookTap(book))
+        } label: {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(Color.custom(hex: "f2f2f2"))
+                .aspectRatio(1.0, contentMode: .fit)
+                .overlay {
+                    if let image = book.firstImage() {
+                        GeometryReader {
+                            let size = $0.size
+                            
+                            Image(uiImage: UIImage(data: image.imageData) ?? UIImage())
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: size.width, height: size.height)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 24)
+                                        .fill(.white.opacity(0.1))
+                                }
+                                .blur(radius: 5)
+                                .clipShape(.rect(cornerRadius: 24))
                         }
-                        .foregroundStyle(.black)
                     }
-            }
-            .frame(width: size, height: size)
+                    VStack(spacing: 0) {
+                        Text(book.name)
+                            .font(.standard(size: 16, weight: 420))
+                            .frame(height: .heightForFontSize(size: 20))
+                        Text("\(book.items.count) entries")
+                            .font(.standard(size: 12, weight: 360))
+                            .kerning(-0.12)
+                            .frame(height: .heightForFontSize(size: 20))
+                            .opacity(0.6)
+                    }
+                    .foregroundStyle(book.firstImage() == nil ? .black : .white)
+                }
         }
     }
 }

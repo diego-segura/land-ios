@@ -22,6 +22,9 @@ class BookViewModel: ObservableObject {
     
     func trigger(_ action: Action) {
         switch action {
+        case .onAdd:
+            handleOnAdd()
+            
         case .onAppear:
             handleOnAppear()
             
@@ -46,6 +49,7 @@ extension BookViewModel {
         case onAppear
         case onDisappear
         case onPop
+        case onAdd
     }
 }
 
@@ -61,5 +65,9 @@ private extension BookViewModel {
     
     func handleOnPop() {
         router.pop()
+    }
+    
+    func handleOnAdd() {
+        router.present(.addEntriesMenu, as: .animated)
     }
 }

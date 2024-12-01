@@ -64,6 +64,6 @@ private extension AddEntryViewModel {
         }
     }
     func handleOnAddBook() {
-        // TODO: create a book and save entry
+        router.push(to: .createBook(CreateBookViewModel(item: state.gridItem)))
     }
 }

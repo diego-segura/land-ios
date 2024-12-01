@@ -10,18 +10,26 @@ import SwiftUI
 enum HomePushDestination: PushDestination {
     
     case addEntryView(AddEntryViewModel)
+    case addImage(AddImageViewModel)
     case addText(AddTextViewModel)
+    case createBook(CreateBookViewModel)
     case profile(ProfileViewModel)
     case book(BookViewModel)
     
     @ViewBuilder
     var destination: some View {
         switch self {
+        case .addImage(let viewModel):
+            AddImageView(viewModel: viewModel)
+            
         case .addText(let viewModel):
             AddTextView(viewModel: viewModel)
         
         case .addEntryView(let viewModel):
             AddEntryView(viewModel: viewModel)
+            
+        case .createBook(let viewModel):
+            CreateBookView(viewModel: viewModel)
             
         case .profile(let viewModel):
             ProfileView(viewModel: viewModel)

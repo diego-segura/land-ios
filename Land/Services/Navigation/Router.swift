@@ -51,6 +51,11 @@ class Router<T: PushDestination, U: SheetDestination, V: SwitchDestination>: Obs
         navigationPath.removeLast()
     }
     
+    func pop(last amount: Int) {
+        guard canPop(), amount >= navigationPath.count else { return }
+        navigationPath.removeLast(amount)
+    }
+    
     func popToRoot() {
         guard canPop() else { return }
         navigationPath.removeAll()
