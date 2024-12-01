@@ -86,7 +86,7 @@ struct ItemView: View {
                                 Divider()
                             }
                             VStack(alignment: .leading, spacing: 12) {
-                                Text("april 3, 2024")
+                                Text(item.timeStamp.toLongDateFormat())
                                     .font(.standard(size: 12, weight: 360))
                                     .foregroundStyle(.black)
                                     .kerning(-0.12)
@@ -99,7 +99,6 @@ struct ItemView: View {
                                     .kerning(-0.12)
                             }
                         }
-                        .offset(y: animateContent ? 0 : size.height)
                         .opacity(animateContent ? cornerProgress : 0)
                     }
                     .padding(.horizontal, 10)
@@ -175,7 +174,7 @@ struct ItemView: View {
     }
     
     var comment: AttributedString {
-        var result = AttributedString(item.description)
+        var result = AttributedString(item.title)
         result.font = .standard(size: 12, weight: 360)
         result.foregroundColor = .black
         result.kern = -0.12

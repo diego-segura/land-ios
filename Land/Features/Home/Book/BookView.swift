@@ -90,14 +90,11 @@ struct BookView: View {
         .onAppear {
             viewModel.trigger(.onAppear)
         }
-        .onDisappear {
-            viewModel.trigger(.onDisappear)
-        }
     }
     
     var infoSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(book.name)
+            Text(viewModel.state.book.name)
                 .font(.standard(size: 24, weight: 310))
                 .foregroundStyle(.black)
             HStack(spacing: 6) {
@@ -120,7 +117,7 @@ struct BookView: View {
                     .font(.standard(size: 14, weight: 360))
                 Image(systemName: "arrow.clockwise")
                     .font(.system(size: 14))
-                Text("updated 10 secs ago")
+                Text("updated \(viewModel.state.lastUpdated)")
                     .font(.standard(size: 14, weight: 360))
             }
             .foregroundStyle(Color.custom(hex: "999999"))

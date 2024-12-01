@@ -10,6 +10,7 @@ import SwiftUI
 struct CreateBookView: View {
     
     @StateObject private var viewModel: CreateBookViewModel
+    @FocusState private var isFocused: Bool
     
     init(viewModel: @autoclosure @escaping () -> CreateBookViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel())
@@ -42,6 +43,7 @@ struct CreateBookView: View {
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
                 .tint(.black)
+                .focused($isFocused)
             }
             .padding(.horizontal, 85)
         }
@@ -71,6 +73,9 @@ struct CreateBookView: View {
         }
         .customBackButton {
             viewModel.trigger(.onPop)
+        }
+        .onAppear {
+            isFocused = true
         }
     }
     
@@ -107,7 +112,12 @@ struct CreateBookView: View {
     CreateBookView(
         viewModel: CreateBookViewModel(
             item: .text(
-                .init(text: "dalmacijo moja suzo procvala")
+                .init(
+                    id: UUID().uuidString,
+                    text: "dalmacijo moja suzo procvala",
+                    timeStamp: Date(),
+                    description: ""
+                )
             )
         )
     )
@@ -120,8 +130,8 @@ struct CreateBookView: View {
                 .init(
                     id: "some",
                     title: "",
-                    description: "",
-                    imageData: Data()
+                    imageData: Data(),
+                    timeStamp: Date()
                 )
             )
         )

@@ -50,9 +50,9 @@ private extension AddImageViewModel {
         
         let item = ImageGridEntity(
             id: UUID().uuidString,
-            title: UUID().uuidString,
-            description: UUID().uuidString,
-            imageData: imageItem
+            title: "",
+            imageData: imageItem,
+            timeStamp: Date()
         )
         router.push(to: .addEntryView(AddEntryViewModel(item: .image(item))))
     }

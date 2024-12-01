@@ -138,10 +138,6 @@ struct ProfileView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: size.width, height: size.height)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 24)
-                                        .fill(.white.opacity(0.1))
-                                }
                                 .blur(radius: 5)
                                 .clipShape(.rect(cornerRadius: 24))
                         }

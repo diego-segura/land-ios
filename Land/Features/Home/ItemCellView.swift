@@ -35,7 +35,7 @@ struct ItemCellView: View {
             
             if !expandSheet {
                 HStack {
-                    Text(item.description)
+                    Text(item.title)
                         .font(.standard(size: 10, weight: 360))
                         .lineLimit(1)
                         .foregroundStyle(Color.custom(hex: "666666"))

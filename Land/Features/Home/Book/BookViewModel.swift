@@ -28,9 +28,6 @@ class BookViewModel: ObservableObject {
         case .onAppear:
             handleOnAppear()
             
-        case .onDisappear:
-            handleOnDisappear()
-            
         case .onPop:
             handleOnPop()
         }
@@ -43,11 +40,11 @@ extension BookViewModel {
         var items: [[GridItem]] = []
         var expandSheet = false
         var selectedItem: GridItem?
+        var lastUpdated = ""
     }
     
     enum Action {
         case onAppear
-        case onDisappear
         case onPop
         case onAdd
     }
@@ -56,11 +53,10 @@ extension BookViewModel {
 private extension BookViewModel {
     func handleOnAppear() {
         AppState.shared.swipeEnabled = true
-        print(state.book)
-    }
-    
-    func handleOnDisappear() {
-
+        
+        if let lastItem = state.book.items.last {
+            state.lastUpdated = lastItem.timeStamp.timeAgo()
+        }
     }
     
     func handleOnPop() {

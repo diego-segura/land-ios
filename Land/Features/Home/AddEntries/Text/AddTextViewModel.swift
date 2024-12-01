@@ -42,6 +42,19 @@ private extension AddTextViewModel {
     }
     
     func handleOnNext() {
-        router.push(to: .addEntryView(AddEntryViewModel(item: .text(.init(text: state.text)))))
+        router.push(
+            to: .addEntryView(
+                AddEntryViewModel(
+                    item: .text(
+                        .init(
+                            id: UUID().uuidString,
+                            text: state.text,
+                            timeStamp: Date(),
+                            description: ""
+                        )
+                    )
+                )
+            )
+        )
     }
 }

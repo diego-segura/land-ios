@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ImageGridEntity: Codable, Hashable, Identifiable {
     let id: String
-    let title: String
-    let description: String
+    var title: String
     let imageData: Data
+    let timeStamp: Date
 }

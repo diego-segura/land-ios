@@ -9,6 +9,7 @@ import SwiftUI
 
 enum HomePushDestination: PushDestination {
     
+    case addCaption(AddCaptionViewModel)
     case addEntryView(AddEntryViewModel)
     case addImage(AddImageViewModel)
     case addText(AddTextViewModel)
@@ -19,6 +20,9 @@ enum HomePushDestination: PushDestination {
     @ViewBuilder
     var destination: some View {
         switch self {
+        case .addCaption(let viewModel):
+            AddCaptionView(viewModel: viewModel)
+            
         case .addImage(let viewModel):
             AddImageView(viewModel: viewModel)
             
