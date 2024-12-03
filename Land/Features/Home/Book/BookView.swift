@@ -78,8 +78,13 @@ struct BookView: View {
             if let selectedItem = viewModel.state.selectedItem, viewModel.state.expandSheet {
                 switch selectedItem {
                 case .image(let image):
-                    ItemView(expandSheet: $viewModel.state.expandSheet, animation: animation, item: image)
-                        .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
+                    ItemView(
+                        expandSheet: $viewModel.state.expandSheet,
+                        animation: animation,
+                        item: image,
+                        book: viewModel.state.book
+                    )
+                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: -5)))
                 case .text(let text):
                     Text(text.text)
                 case .link:
@@ -160,12 +165,12 @@ struct BookView: View {
     }
     
     func textView(item: TextGridItem) -> some View {
-            Text(item.text)
-                .lineLimit(8)
-                .font(.standard(size: 12, weight: 360))
-                .padding(17)
-                .frame(maxWidth: .infinity)
-                .background(Color.custom(hex: "f2f2f2"), in: .rect(cornerRadius: 24))
+        Text(item.text)
+            .lineLimit(8)
+            .font(.standard(size: 12, weight: 360))
+            .padding(17)
+            .frame(maxWidth: .infinity)
+            .background(Color.custom(hex: "f2f2f2"), in: .rect(cornerRadius: 24))
     }
     
     func imageView(item: ImageGridEntity) -> some View {
@@ -211,19 +216,14 @@ private struct ImageView: View {
     var body: some View {
         ZStack {
             if expandSheet {
-                GeometryReader {
-                    let size = $0.size
-                    
-                    if let image = image {
-                        Image(uiImage: image)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: size.width, height: size.height)
-                            .clipShape(.rect(cornerRadius: 24))
-                    }
+                if let image = image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipShape(.rect(cornerRadius: 24))
+                        .transition(.blurReplace)
+                        .opacity(item.id == selectedItemId ? 0 : 1)
                 }
-                .transition(.blurReplace)
-                .opacity(item.id == selectedItemId ? 0 : 1)
             } else {
                 ItemCellView(expandSheet: $expandSheet, animation: animation, item: item)
                     .onTapGesture {

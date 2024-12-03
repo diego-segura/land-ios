@@ -15,12 +15,19 @@ struct ItemView: View {
     @State private var offsetY: CGFloat = 0
     
     let item: ImageGridEntity
+    let book: Book
     let image: UIImage?
     
-    init(expandSheet: Binding<Bool>, animation: Namespace.ID, item: ImageGridEntity) {
+    init(
+        expandSheet: Binding<Bool>,
+        animation: Namespace.ID,
+        item: ImageGridEntity,
+        book: Book
+    ) {
         self._expandSheet = expandSheet
         self.animation = animation
         self.item = item
+        self.book = book
         self.image = UIImage(data: item.imageData)
     }
     
@@ -190,7 +197,7 @@ struct ItemView: View {
     }
     
     var title2: AttributedString {
-        var result = AttributedString(" Letters to remember")
+        var result = AttributedString(" \(book.name)")
         result.font = .standard(size: 11, weight: 472)
         result.foregroundColor = .black
         result.kern = -0.11

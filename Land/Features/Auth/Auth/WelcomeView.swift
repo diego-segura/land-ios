@@ -59,6 +59,7 @@ struct WelcomeView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden()
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 withAnimation(.smooth(duration: 0.35)) {

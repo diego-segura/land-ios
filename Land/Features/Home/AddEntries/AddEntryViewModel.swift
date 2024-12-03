@@ -71,31 +71,32 @@ private extension AddEntryViewModel {
     }
     
     func handleOnAddBook() {
-        router.push(to: .createBook(CreateBookViewModel(item: state.gridItem)))
+        let item = createItem()
+        router.push(to: .createBook(CreateBookViewModel(item: item)))
     }
     
     func createItem() -> GridItem {
         switch state.gridItem {
         case .image(let image):
-                .image(
-                    ImageGridEntity(
-                        id: image.id,
-                        title: state.itemDescription,
-                        imageData: image.imageData,
-                        timeStamp: image.timeStamp
-                    )
+            .image(
+                ImageGridEntity(
+                    id: image.id,
+                    title: state.itemDescription,
+                    imageData: image.imageData,
+                    timeStamp: image.timeStamp
                 )
+            )
         case .text(let text):
-                .text(
-                    TextGridItem(
-                        id: text.id,
-                        text: text.text,
-                        timeStamp: text.timeStamp,
-                        description: state.itemDescription
-                    )
+            .text(
+                TextGridItem(
+                    id: text.id,
+                    text: text.text,
+                    timeStamp: text.timeStamp,
+                    description: state.itemDescription
                 )
+            )
         case .link:
-                .link
+            .link
         }
     }
 }
