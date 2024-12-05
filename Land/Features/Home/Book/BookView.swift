@@ -22,9 +22,7 @@ struct BookView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 67) {
-                
                 infoSection
-                
                 LazyVGrid(columns: [.init(spacing: 5, alignment: .top), .init(spacing: 5, alignment: .top)]) {
                     LazyVStack(spacing: 5) {
                         addButton
@@ -169,7 +167,7 @@ struct BookView: View {
             .lineLimit(8)
             .font(.standard(size: 12, weight: 360))
             .padding(17)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 120, alignment: .topLeading)
             .background(Color.custom(hex: "f2f2f2"), in: .rect(cornerRadius: 24))
     }
     
