@@ -7,6 +7,7 @@
 
 import Dependencies
 import UIKit
+import SwiftUI
 
 class CreateProfileViewModel: ObservableObject {
     
@@ -42,6 +43,7 @@ extension CreateProfileViewModel {
         var username = ""
         var croppedImage: UIImage?
         var canSubmit = false
+        var profileColor: Color?
     }
 }
 
@@ -67,7 +69,8 @@ private extension CreateProfileViewModel {
             websiteUrl: website,
             location: location,
             bio: bio,
-            imageData: state.croppedImage?.pngData()
+            imageData: state.croppedImage?.pngData(),
+            profileColor: state.profileColor?.toHex()
         )
         
         LocalStorage.userProfile = user

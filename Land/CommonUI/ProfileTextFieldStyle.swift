@@ -15,7 +15,7 @@ struct ProfileTextFieldStyle: TextFieldStyle {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 5) {
                 Text(input.title)
-                    .font(.standard(size: 14, weight: 360))
+                    .font(.standard(.subheadline, weight: .medium))
                     .foregroundStyle(Color.custom(hex: "999999"))
                 
                 if !input.isMandatory {

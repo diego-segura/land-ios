@@ -17,4 +17,5 @@ struct User: Codable, Identifiable {
     let location: String?
     let bio: String?
     let imageData: Data?
+    let profileColor: String?
 }

@@ -7,40 +7,100 @@
 
 import SwiftUI
 
-struct BigHighlightedButtonStyle: ButtonStyle {
+struct BigHighlightedButtonStyle<S1: ShapeStyle, S2: ShapeStyle>: ButtonStyle {
+    
+    @Environment(\.isEnabled) private var isEnabled
+    
+    var background: S1
+    var foreground: S2
+    
+    init(_ background: S1, _ foreground: S2) {
+        self.background = background
+        self.foreground = foreground
+    }
+    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .fontWeight(.light)
+            .labelStyle(ExtendedLabelStyle())
             .padding(.vertical, 20)
             .frame(maxWidth: .infinity)
-            .padding(.leading, 23)
-            .padding(.trailing, 19)
-            .background(Color.brand, in: .rect(cornerRadius: 24))
+            .padding(.horizontal, 25)
+            .foregroundStyle(foreground)
+            .background(background, in: .rect(cornerRadius: 20, style: .continuous))
             .opacity(configuration.isPressed ? 0.6 : 1)
+            .opacity(isEnabled ? 1 : 0.6)
     }
 }
 
-extension ButtonStyle where Self == BigHighlightedButtonStyle {
+extension ButtonStyle where Self == BigHighlightedButtonStyle<Color, Color> {
+    static var bigStandard: Self {
+        BigHighlightedButtonStyle(Color(uiColor: .tertiarySystemFill), Color(uiColor: .label))
+    }
+    
+    static var bigWhite: Self {
+        BigHighlightedButtonStyle(Color.white, Color(uiColor: .label))
+    }
+    
     static var bigHighlighted: Self {
-        BigHighlightedButtonStyle()
+        BigHighlightedButtonStyle(Color.brand, Color.brandDark)
     }
 }
 
 #Preview {
-    HStack {
-        Button {
-            
-        } label: {
-            HStack {
-                Text("next")
-                    .font(.standard(size: 16, weight: 360))
-                Spacer()
-                Image(systemName: "arrow.right")
-                    .font(.system(size: 16))
+    VStack {
+        GroupBox("Enabled") {
+            Button {
+                
+            } label: {
+                Label("next", systemImage: "arrow.right")
+                    .font(.standard(weight: .regular))
             }
-            .foregroundStyle(.brandDark)
+            .buttonStyle(.bigHighlighted)
+            
+            Button {
+                
+            } label: {
+                Label("next", systemImage: "arrow.right")
+                    .font(.standard(weight: .regular))
+            }
+            .buttonStyle(.bigStandard)
+            
+            Button {
+                
+            } label: {
+                Label("next", systemImage: "arrow.right")
+                    .font(.standard(weight: .regular))
+            }
+            .buttonStyle(.bigWhite)
+            .shadow(radius: 10)
         }
-        .buttonStyle(.bigHighlighted)
+        
+        GroupBox("Disabled") {
+            Button {
+                
+            } label: {
+                Label("next", systemImage: "arrow.right")
+                    .font(.standard(weight: .regular))
+            }
+            .buttonStyle(.bigHighlighted)
+            
+            Button {
+                
+            } label: {
+                Label("next", systemImage: "arrow.right")
+                    .font(.standard(weight: .regular))
+            }
+            .buttonStyle(.bigStandard)
+            
+            Button {
+                
+            } label: {
+                Label("next", systemImage: "arrow.right")
+                    .font(.standard(weight: .regular))
+            }
+            .buttonStyle(.bigWhite)
+        }
+        .disabled(true)
     }
     .padding()
 }

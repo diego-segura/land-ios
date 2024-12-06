@@ -16,8 +16,9 @@ struct AddEntriesMenuView: View {
         VStack(alignment: .leading, spacing: 18) {
             Spacer()
             Text("add entries")
-                .font(.standard(size: 24, weight: 310))
+                .font(.standard(.title1, weight: .light))
                 .padding(.horizontal, 10)
+            
             VStack(spacing: 5) {
                 button(title: "from your camera roll", symbol: "camera") {
                     router.dismiss()
@@ -37,39 +38,34 @@ struct AddEntriesMenuView: View {
     
     func button(title: String, symbol: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            HStack {
-                Text(title)
-                    .font(.standard(size: 16, weight: 360))
-                Spacer()
-                Image(systemName: symbol)
-                    .font(.system(size: 16))
-            }
-            .foregroundStyle(.black)
+            Label(title, systemImage: symbol)
         }
-        .buttonStyle(.white)
+        .buttonStyle(.bigWhite)
     }
 }
 
 #Preview {
     @Previewable @State var isPresented = true
-    ProfileView(viewModel: ProfileViewModel())
-        .overlay(content: {
-            Button("tap") {
-                withAnimation(.smooth(duration: 0.3)) {
-                    isPresented.toggle()
+    NavigationStack {
+        ProfileView(viewModel: ProfileViewModel())
+            .overlay(content: {
+                Button("tap") {
+                    withAnimation(.smooth(duration: 0.3)) {
+                        isPresented.toggle()
+                    }
                 }
+            })
+            .overlay(content: {
+                if isPresented {
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                        .transition(.blurReplace)
+                        .ignoresSafeArea()
+                }
+            })
+            .fullScreenCover(isPresented: $isPresented) {
+                AddEntriesMenuView()
+                    .presentationBackground(.clear)
             }
-        })
-        .overlay(content: {
-            if isPresented {
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-                    .transition(.blurReplace)
-                    .ignoresSafeArea()
-            }
-        })
-        .fullScreenCover(isPresented: $isPresented) {
-            AddEntriesMenuView()
-                .presentationBackground(.clear)
-        }
+    }
 }
