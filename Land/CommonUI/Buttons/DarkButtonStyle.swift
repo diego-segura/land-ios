@@ -10,11 +10,11 @@ import SwiftUI
 struct DarkButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: 17))
+            .font(.standard(weight: .semibold))
             .fontWeight(.semibold)
             .foregroundStyle(.white)
             .allowsTightening(true)
-            .padding(.vertical, 14)
+            .padding(14)
             .frame(maxWidth: .infinity)
             .background(.black, in: .capsule)
             .opacity(configuration.isPressed ? 0.6 : 1)
@@ -29,7 +29,7 @@ extension ButtonStyle where Self == DarkButtonStyle {
 
 #Preview {
     @Previewable @State var height: CGFloat = 0.0
-    Button("Continue with Apple \(height)", systemImage: "apple.logo") {
+    Button("Continue with Apple", systemImage: "apple.logo") {
         
     }
     .buttonStyle(.dark)

@@ -44,6 +44,7 @@ struct CreateProfileView: View {
                         )
                         .focused($focusedField, equals: .username)
                     image
+                    ProfileColorPicker
                     ForEach($viewModel.state.fields) { $field in
                         TextField(field.placeholder, text: $field.text, axis: field.type == .bio ? .vertical : .horizontal)
                             .textFieldStyle(.profile(field: field))
@@ -146,7 +147,7 @@ struct CreateProfileView: View {
                 } label: {
                     Circle()
                         .frame(width: 112, height: 112)
-                        .foregroundStyle(Color.custom(hex: "F2F2F2"))
+                        .foregroundStyle(Color(uiColor: .tertiarySystemFill))
                         .overlay {
                             Image(systemName: "plus.viewfinder")
                                 .font(.title)
@@ -154,6 +155,30 @@ struct CreateProfileView: View {
                         }
                 }
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var ProfileColorPicker: some View {
+        var colorBinding: Binding<Color> {
+            Binding {
+                viewModel.state.profileColor ?? Color(uiColor: .tertiarySystemFill)
+            } set: {
+                viewModel.state.profileColor = $0
+            }
+        }
+                
+        ColorPicker(selection: colorBinding, supportsOpacity: false) {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(viewModel.state.profileColor ?? Color(uiColor: .tertiarySystemFill))
+                .frame(width: 134, height: 54)
+                .overlay {
+                    if viewModel.state.profileColor == Color(uiColor: .tertiarySystemFill) {
+                        Image(systemName: "plus")
+                            .font(.title)
+                            .foregroundStyle(.black)
+                    }
+                }
         }
     }
 }

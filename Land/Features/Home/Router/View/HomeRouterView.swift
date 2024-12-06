@@ -28,13 +28,22 @@ struct HomeRouterView: View {
         .tint(.black.opacity(0.5))
         .allowsHitTesting(router.animatedCover == nil)
         .blur(radius: router.animatedCover != nil ? 10 : 0)
+        //.scaleEffect(router.animatedCover != nil ? 1.02 : 1)
+        //.opacity(router.animatedCover != nil ? 0.5 : 1)
         .overlay {
-            if let animatedCover = router.animatedCover {
-                animatedCover.destination
-                    .transition(.blurReplace())
-                    .onTapGesture {
-                        router.dismiss()
-                    }
+            ZStack(alignment: .bottom) {
+                if let animatedCover = router.animatedCover {
+                    Color.white.opacity(0.2)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            router.dismiss()
+                        }
+                    
+                    animatedCover.destination
+                        .shadow(color: .black.opacity(0.1), radius: 20, x: 0, y: 5)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .transition(.blurReplace())
+                }
             }
         }
         .overlay(alignment: .bottomTrailing) {
@@ -43,8 +52,8 @@ struct HomeRouterView: View {
                     .transition(.blurReplace)
             }
         }
-        .animation(.smooth(duration: 0.3), value: router.animatedCover)
-        .animation(.smooth(duration: 0.3), value: showFloatingNavigation)
+        .animation(.snappy, value: router.animatedCover)
+        .animation(.snappy, value: showFloatingNavigation)
         .onChange(of: router.navigationPath) { _, newValue in
             showFloatingNavigation = newValue.last?.showsFloatingNavigation ?? true
         }

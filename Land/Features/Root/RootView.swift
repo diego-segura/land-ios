@@ -23,8 +23,7 @@ struct RootView: View {
         Group {
             switch viewModel.state.rootState {
             case .loading:
-                ProgressView()
-                
+                ProgressView()    
             case .auth:
                 auth
                     .transition(.offset(x: -UIScreen.main.bounds.width))
